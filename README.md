@@ -1,4 +1,7 @@
 # Genefinder
+
+##### This project is to deal with large amount of Data in high-throughput suppressor screening and to predict suppressor genes.
+##### Users should follow the readme to input correct format of the files.
 # What is new in version 1.1.0
 
 ### 1. You can get rid of some annoying background variation by just removing them when 'filter'
