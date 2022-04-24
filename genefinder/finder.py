@@ -68,7 +68,7 @@ def filter(taglist, lengthlimit=0.6, threshold=1.05 , rid = ['ttn-1','cla-1']):
     return result
 
 
-def plot(result, size=800, c='Reds', title='variation_number', sub_c='RdPu',intersection_num = 0):
+def plot(result, size=800, c='Reds', title='variation_number', sub_c='RdPu',intersection_factor = 0):
     list_var = []
     samplesize = 1.4 * max(result['variation_number'])
     m = result
@@ -145,7 +145,7 @@ def plot(result, size=800, c='Reds', title='variation_number', sub_c='RdPu',inte
                     fig.canvas.draw_idle()
 
     # mouse event to get intersection
-    def getintersection(event, color=sub_c , num = intersection_num):
+    def getintersection(event, color=sub_c , num = intersection_factor):
         if event.inaxes == ax:
             cont, ind = sc.contains(event)
             if cont:
@@ -183,7 +183,7 @@ def intersect(result, samplename, i_num):
     indlist = []
     for i in range(len(sm)):
         tmp = [a for a in sn if a in list(sm[i])]
-        if len(tmp) > i_num:
+        if len(tmp) > i_num * len(sn):
             indlist.append(i)
     result = pd.DataFrame(result).drop(index=indlist, axis=0)
     n = result.shape[0]
