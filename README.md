@@ -1,5 +1,7 @@
 # Gene Torch 1.1.1
 
+```pip install genetorch```
+
 ## What is new in version 1.1.1
 
 ### 1. You can get rid of some annoying background variation by just removing them when 'filter'
