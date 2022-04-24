@@ -68,7 +68,7 @@ def filter(taglist, lengthlimit=0.6, threshold=1.05 , rid = ['ttn-1','cla-1']):
     return result
 
 
-def plot(result, size=800, c='Reds', title='variation_number', sub_c='RdPu',intersection_factor = 0):
+def plot(result, size=800, c='Reds', title='variation_number', sub_c='RdPu',intersection_factor = 0.03):
     list_var = []
     samplesize = 1.4 * max(result['variation_number'])
     m = result
