@@ -1,3 +1,4 @@
-from genefinder import finder
-from genefinder import stocker
-from genefinder import reader
+from genetorch import finder
+from genetorch import stocker
+from genetorch import reader
+from genetorch import simulator
