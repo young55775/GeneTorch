@@ -1,6 +1,35 @@
-# Gene Torch 1.1.1
+# Gene Torch 1.2.0
 
-```pip install genetorch```
+[TOC]
+
+## What is new in version 1.2.0
+```genetorch.finder.plotpro(readfile,size,c='Reds',sub_c='RdPu',origin = a)```
+
+A more professional version to distinguish gene via binominal distribution instead of overlap. The calculation is a bit slow but more accurate.
+The genes you tried will be saved ```in a.candidate``` and all the sample names of the candidate gene will be listed in ```a.suppressor_group```.
+You should also notice that in the previous version, ```genetorch.finder.plot(result,size,c,sub_c)``` you shall input a result file. In this function, you may need to input the whole readfile() object or getfile() object instead.
+
+```genetorch.reader.get_impact(readfile)```
+
+This function can now annotate splice_donor and splice_acceptor variation with 'X_donor' and 'X_acceptor' because we noticed that splice variation do have an impact on protein function.
+
+```genetorch.finder.get_p_sup(gene,readfile)```
+
+return a Dataframe including all the p values the gene you chose vs others.
+
+```genetorch.finder.get_p_between(readfile,genea,geneb)```
+
+return the p value between genea and geneb
+
+```genetorch.finder.find(readfile)/filter(readfile,lengthlimit,rid)```
+
+We canceled the threshold in 'filter' because we noticed that it is not very useful and can make our users confused. These two functions will automatically do a ```genetorch.reader.get_impact``` now.
+Also, in some cases you may have to reset the  candidate and suppressor_group list. You only need to do a filter or find to do this.
+
+```genetorch.simulator.false_positive(readfile,gene,[0.05,0.04,0.03,0.02,0.01])```
+
+Give the estimated value of the false positive cases using the gene you chose to compare with others. This step will cost about 5 mins for each value.
+
 
 ## What is new in version 1.1.1
 
@@ -42,10 +71,15 @@ Any advise is welcomed, please contact
 ```genetorch.reader.readfile(filepath)```
 
    multiple renamed vcf files must be included in the filepath.
-   examples:
-   ###### filepath/1.vcf
-   ###### filepath/2.vcf
-   ###### filepath/3.vcf
+  ```
+filepath
+|---1.vcf
+|---2.vcf
+|---3.vcf
+|---4.vcf
+|---5.vcf
+|---6.vcf
+```
 
 ```genetorch.reader.getfile(filepath,filename)```
 
@@ -53,20 +87,35 @@ Any advise is welcomed, please contact
    in the folders, the name of the folder must be splited with '_' to divide the folder name into strain name and
    WGS order name:
 examples:
-   ###### filepath/cas113_20221011jxskaosdosh/filename.vcf
-   ###### filepath/cas114_20221011jxskaosdosh/filename.vcf
-   ###### filepath/cas115_20221011jxskaosdosh/filename.vcf
-   ###### filepath/cas116_20221011jxskaosdosh/filename.vcf
-   ###### filepath/cas117_20221011jxskaosdosh/filename.vcf
-   ###### filepath/cas118_20221011jxskaosdosh/filename.vcf
+```
+filepath
+|---cas113_20221011jxskaosdosh---filename.vcf
+|---cas114_20221011jxskaosdosh---filename.vcf
+|---cas115_20221011jxskaosdosh---filename.vcf
+|---cas116_20221011jxskaosdosh---filename.vcf
+|---cas117_20221011jxskaosdosh---filename.vcf
+|---cas118_20221011jxskaosdosh---filename.vcf
+```
+
 
 a temp folder will be automatically created in the filepath including renamed vcf files:
-   ###### filepath/temp/cas113.vcf
-   ###### filepath/temp/cas114.vcf
-   ###### filepath/temp/cas115.vcf
-   ###### filepath/temp/cas116.vcf
-   ###### filepath/temp/cas117.vcf
-   ###### filepath/temp/cas118.vcf
+  ```
+filepath
+|----temp
+|     |---cas113.vcf
+|     |---cas114.vcf
+|     |---cas115.vcf
+|     |---cas116.vcf
+|     |---cas117.vcf
+|     |---cas118.vcg
+|---cas113_20221011jxskaosdosh---filename.vcf
+|---cas114_20221011jxskaosdosh---filename.vcf
+|---cas115_20221011jxskaosdosh---filename.vcf
+|---cas116_20221011jxskaosdosh---filename.vcf
+|---cas117_20221011jxskaosdosh---filename.vcf
+|---cas118_20221011jxskaosdosh---filename.vcf
+```
+
 
 
 ```a = genetorch.readfile()```
@@ -86,7 +135,7 @@ example:
 
 ```genetorch.finder```
 
-```genetorch.finder.find(taglist)```
+```genetorch.finder.find(readfile())```
 
    return a pandas Dataframe item.
 example:
@@ -98,14 +147,15 @@ example:
    ttn-1 mutation is found in 2 input files, there are three amino acid variation events, 2 * Glu374Gln, 1 * Asp666Asn.
    There are two kinds of variations in this gene.
 
-```genetorch.finder.filter(taglist,lengthlimit = 0.6,threshold = 1,rid = ['ttn-1','cla-1'])```
+```genetorch.finder.filter(readfile(),lengthlimit = 0.6,rid = ['ttn-1','cla-1'])```
 
    return a pandas Dataframe item same as find().
 
 provide filtered data:
-   ### lengthlimit:  if  n(amino acid variation) > lengthlimit * n(input files), exclude the variation
-   ### threshold: if n(variation_number) > threshold * n(input files) , exclude the gene
-   if the gene has no variation left after filtered, the gene will be deleted from the result Dataframe
+
+lengthlimit:  if  n(amino acid variation) > lengthlimit * n(input files), exclude the variation
+ 
+if the gene has no variation left after filtered, the gene will be deleted from the result Dataframe
 
 
 ```genetorch.finder.plot(result,size,intersection_num)```
@@ -113,11 +163,11 @@ provide filtered data:
    result: result Dataframe from find() or filter()
    size: use the first n lines to show the plot.  
 
-   ##### x: gene name
-   ##### y:variation number
-   ##### size: size
-   ##### color: variation number/size
-   ##### click to see annotation of each bubble
+    x: gene name
+    y:variation number
+    size: size
+    color: variation number/size
+    automatically show annotation of each bubble
 
 
 ```genetorch.stocker```
@@ -131,20 +181,33 @@ provide filtered data:
    in the folders, the name of the folder must be splited with '_' to divide the folder name into strain name and
    WGS order name:
 examples:
-   ##### filepath/cas113_20221011jxskaosdosh/filename.vcf
-   ##### filepath/cas114_20221011jxskaosdosh/filename.vcf
-   ##### filepath/cas115_20221011jxskaosdosh/filename.vcf
-   ##### filepath/cas116_20221011jxskaosdosh/filename.vcf
-   ##### filepath/cas117_20221011jxskaosdosh/filename.vcf
-   ##### filepath/cas118_20221011jxskaosdosh/filename.vcf
+```
+filepath
+|---cas113_20221011jxskaosdosh---filename.vcf
+|---cas114_20221011jxskaosdosh---filename.vcf
+|---cas115_20221011jxskaosdosh---filename.vcf
+|---cas116_20221011jxskaosdosh---filename.vcf
+|---cas117_20221011jxskaosdosh---filename.vcf
+|---cas118_20221011jxskaosdosh---filename.vcf
+```
 
 a temp folder will be automatically created in the filepath including renamed vcf files:
-   ##### filepath/temp/cas113.vcf
-   ##### filepath/temp/cas114.vcf
-   ##### filepath/temp/cas115.vcf
-   ##### filepath/temp/cas116.vcf
-   ##### filepath/temp/cas117.vcf
-   ##### filepath/temp/cas118.vcf
+  ```
+filepath
+|----temp
+|     |---cas113.vcf
+|     |---cas114.vcf
+|     |---cas115.vcf
+|     |---cas116.vcf
+|     |---cas117.vcf
+|     |---cas118.vcg
+|---cas113_20221011jxskaosdosh---filename.vcf
+|---cas114_20221011jxskaosdosh---filename.vcf
+|---cas115_20221011jxskaosdosh---filename.vcf
+|---cas116_20221011jxskaosdosh---filename.vcf
+|---cas117_20221011jxskaosdosh---filename.vcf
+|---cas118_20221011jxskaosdosh---filename.vcf
+```
 
 
 ### outpath:
@@ -158,10 +221,11 @@ import genetorch as gt
 a = gt.reader.readfile(path) # read vcf files from path
 b = gt.reader.getfile(path,filename) # read vcf files with the filename in the individual folders in the path 
                                              # a has the same properties as b
-c = gt.reader.get_impact(a.taglist) # get impact results from a
-d = gt.finder.find(c) # get the result table
-e = gt.finder.filter(c,lengthlimit = 0.6,threshold = 1, rid = ['ttn-1','cla-1']) # get filtered result table
+gt.reader.get_impact(a) # get impact results from a
+d = gt.finder.find(a) # get the result table
+e = gt.finder.filter(a,lengthlimit = 0.6,threshold = 1, rid = ['ttn-1','cla-1']) # get filtered result table
 gt.finder.plot(e,1000,1) # draw a picture using the first 1000 lines in the result table,
 # allowing 1 sample have more than one suppressor gene
 gt.stocker.stockfile(path,filename,outpath) #get stock file
+
 ```
