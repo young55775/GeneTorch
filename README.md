@@ -1,6 +1,7 @@
+
+
 # Gene Torch 1.2.0
 
-[TOC]
 
 ## What is new in version 1.2.0
 ```genetorch.finder.plotpro(readfile,size,c='Reds',sub_c='RdPu',origin = a)```
